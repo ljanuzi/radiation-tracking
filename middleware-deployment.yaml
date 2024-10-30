@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: C:\Program Files\Kompose\kompose.exe convert -f docker-compose.yml
+    kompose.version: 1.34.0 (cbf2835db)
+  labels:
+    io.kompose.service: middleware
+  name: middleware
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: middleware
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: C:\Program Files\Kompose\kompose.exe convert -f docker-compose.yml
+        kompose.version: 1.34.0 (cbf2835db)
+      labels:
+        io.kompose.service: middleware
+    spec:
+      containers:
+        - image: middleware
+          livenessProbe:
+            exec:
+              command:
+                - curl -f http://localhost:5000 || exit 1
+            failureThreshold: 5
+            periodSeconds: 10
+            timeoutSeconds: 5
+          name: middleware
+          ports:
+            - containerPort: 5000
+              protocol: TCP
+      restartPolicy: Always

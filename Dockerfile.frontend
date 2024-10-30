@@ -1,0 +1,39 @@
+# base image - node:alpine
+FROM node:18.20.2-bullseye-slim as base
+
+# set the working directory to /app
+WORKDIR /app
+
+# copy contents
+COPY frontend/public /app/public
+COPY frontend/src /app/src
+COPY frontend/.env /app/
+COPY frontend/package.json /app/
+
+# Run npm
+RUN npm install
+
+# Expose the port the app runs on
+EXPOSE 3000
+
+# start
+CMD ["npm", "start"]
+
+
+
+# # base image - node:alpine
+# FROM node:18.20.2-bullseye-slim as base
+# # set the working directory to /app
+# WORKDIR /app
+# # copy contents
+# COPY frontend/public /app/public
+# COPY frontend/src /app/src
+# COPY frontend/.env /app/
+# COPY frontend/package.json /app/
+# # Run npm
+# RUN npm install
+
+# # Expose the port the app runs on
+# EXPOSE 3000
+# # start
+# CMD ["npm", "start"]

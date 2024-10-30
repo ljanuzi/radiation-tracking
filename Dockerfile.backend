@@ -1,0 +1,23 @@
+# Use an official Python runtime as a parent image
+FROM python:3.8-slim
+
+# Set the working directory in the container
+WORKDIR /app
+
+# Copy the application code to the container
+COPY producer/ /app
+
+# Install any needed packages specified in requirements.txt
+RUN pip install --no-cache-dir -r /app/requirements.txt
+
+# Expose necessary ports (if any)
+EXPOSE 8888
+
+# Copy the start script
+COPY producer/start_scripts.sh /app/start_scripts.sh
+
+# Ensure the start script has executable permissions
+RUN chmod +x /app/start_scripts.sh
+
+# Run the start script directly
+CMD ["/app/start_scripts.sh"]

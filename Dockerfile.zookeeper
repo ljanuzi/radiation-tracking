@@ -1,0 +1,15 @@
+# Dockerfile.zookeeper
+FROM confluentinc/cp-zookeeper:latest
+
+# Set the working directory
+WORKDIR /zookeeper
+
+# Expose the necessary ports
+EXPOSE 2181
+
+# Define the environment variables for Zookeeper
+ENV ZOOKEEPER_CLIENT_PORT=2181
+ENV ZOOKEEPER_TICK_TIME=2000
+
+# Specify the entrypoint to run Zookeeper
+CMD ["/etc/confluent/docker/run"]

@@ -1,0 +1,85 @@
+version: "3.9"
+
+services:
+  zookeeper:
+    build:
+      context: .
+      dockerfile: Dockerfile.zookeeper
+    networks:
+      - radiation_data
+    ports:
+      - "2181:2181"
+    healthcheck:
+      test: ["CMD-SHELL", "echo ruok | nc localhost 2181 | grep imok || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    image: leartajanuzi/big-data-m3:zookeeper
+
+  kafka:
+    build:
+      context: .
+      dockerfile: Dockerfile.kafka
+    depends_on:
+      - zookeeper
+    networks:
+      - radiation_data
+    ports:
+      - "9092:9092"
+    healthcheck:
+      test: ["CMD", "sh", "-c", "nc -z localhost 9092"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    image: leartajanuzi/big-data-m3:kafka
+
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile.backend
+    depends_on:
+      - kafka
+    networks:
+      - radiation_data
+    ports:
+      - "8888:8888"
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8888 || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    image: leartajanuzi/big-data-m3:backend
+
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile.frontend
+    depends_on:
+      - backend
+      - middleware
+    networks:
+      - radiation_data
+    ports:
+      - "3000:3000"
+    image: leartajanuzi/big-data-m3:frontend
+
+  middleware:
+    build:
+      context: .
+      dockerfile: Dockerfile.middleware
+    depends_on:
+      - backend
+      - kafka
+    networks:
+      - radiation_data
+    ports:
+      - "5000:5000"
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:5000 || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    image: leartajanuzi/big-data-m3:middleware
+
+networks:
+  radiation_data:
