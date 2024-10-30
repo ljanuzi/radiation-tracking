@@ -1,8 +1,10 @@
 # Radiation Tracking
 
-Part of the Big Data, TUHH, SoSe, 2024. Group M3.
+Part of the Big Data, TUHH, SoSe, 2024. 
 
 ## Data Processing
+
+The data can be downloaded from https://safecast.org/data/download/ as a csv file
 
 Apache Kafka forms the core of our radiation tracking system. It's configured within a Docker environment for easy deployment and scalability. The producer is developoed using python and can be run as a juypiter file. The real_time_data_simulation.cs is a file that is constantly being added entries like real data by the data_streaming script to simmulate a real-life streaming experience.
 
